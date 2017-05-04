@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,8 +22,8 @@ HE TENIDO QUE AÑADIR ESTO EN EL BUILD.GRADLE DE LA APP
  */
 
 public class MainActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    public FirebaseAuth mAuth;
+    public FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,42 +53,20 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         };
-        // ...
-        final String email = "prueba@kk.com";
-        final String password = "prueba";
-        if (email != null && password != null) {
-            Toast.makeText(getApplication(), "creando usuario", Toast.LENGTH_SHORT).show();
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d("TAG", "createUserWithEmail:onComplete:" + task.isSuccessful());
-                            Toast.makeText(getApplication(), "¡hecho! " + email + password, Toast.LENGTH_SHORT).show();
 
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
-                            if (!task.isSuccessful()) {
-                                Log.d("TAG", "fallo");
-                            }
-
-                            // ...
-                        }
-                    });
-        }
 
 // (2) FIN ++++++++++++++++++++++++++++++++++++
 
         // -------- BOTON Y CAMPOS DE TEXTO
-        //final EditText email = (EditText) findViewById(R.id.email);
-        //final EditText password = (EditText) findViewById(R.id.password);
+        final EditText email = (EditText) findViewById(R.id.email);
+        final EditText password = (EditText) findViewById(R.id.password);
         Button boton = (Button) (Button) findViewById(R.id.button3);
         boton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //final String emailTexto = email.getText().toString();
-                //final String passwordTexto = password.getText().toString();
-                //creaUsuario(emailTexto,passwordTexto); // creamos el usuario
+                final String emailTexto = email.getText().toString();
+                final String passwordTexto = password.getText().toString();
+                creaUsuario(emailTexto,passwordTexto); // creamos el usuario
 
 
                // Log.d("OnClick", "email=" + emailTexto + " password=" + passwordTexto);
@@ -118,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         //
     }
 
-    public void creaUsuario(String email, String password){
+    public void creaUsuario(final String emailTexto, final String passwordTexto){
 
     /*
 https://firebase.google.com/docs/auth/android/password-auth
@@ -146,26 +125,28 @@ como la verificación de que la contraseña de la cuenta nueva se escribió corr
 
 
     (3) FIN*/
-   if (email != null && password != null) {
-       Toast.makeText(getApplication(), "creando usuario", Toast.LENGTH_SHORT).show();
-       mAuth.createUserWithEmailAndPassword(email, password)
-               .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                   @Override
-                   public void onComplete(@NonNull Task<AuthResult> task) {
-                       Log.d("TAG", "createUserWithEmail:onComplete:" + task.isSuccessful());
-                       Toast.makeText(getApplication(), "¡hecho! ", Toast.LENGTH_SHORT).show();
+        // ...
 
-                       // If sign in fails, display a message to the user. If sign in succeeds
-                       // the auth state listener will be notified and logic to handle the
-                       // signed in user can be handled in the listener.
-                       if (!task.isSuccessful()) {
-                           Log.d("TAG", "fallo");
-                       }
+        if (emailTexto != null && passwordTexto!= null) {
+            Toast.makeText(getApplication(), "creando usuario", Toast.LENGTH_SHORT).show();
+            mAuth.createUserWithEmailAndPassword(emailTexto, passwordTexto)
+                    .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d("TAG", "createUserWithEmail:onComplete:" + task.isSuccessful());
+                            Toast.makeText(getApplication(), "¡hecho! " + emailTexto.toString() + passwordTexto.toString(), Toast.LENGTH_SHORT).show();
 
-                       // ...
-                   }
-               });
-   }
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.d("TAG", "fallo");
+                            }
+
+                            // ...
+                        }
+                    });
+        }
 
 
 
@@ -185,30 +166,10 @@ Crea una cuenta nueva al pasar la dirección de correo electrónico y la contras
 
     }
 
-    public void autenticaUsuario (String email, String password){
+    public void autenticaUsuario (final String emailTexto, final String passwordTexto) {
 
-        /*
-Si el inicio de sesión es exitoso, AuthStateListener ejecuta el callback onAuthStateChanged.
-En el callback, puedes usar el método getCurrentUser para obtener los datos de cuenta del usuario.
 
-         */
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.d("TAG", "signInWithEmail:failed", task.getException());
-
-                        }
-
-                        // ...
-                    }
-                });
 
     }
 }
+
