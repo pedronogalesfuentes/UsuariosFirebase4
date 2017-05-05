@@ -1,5 +1,6 @@
 package com.example.pedro.usuariosfirebase;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d("TAG", "onAuthStateChanged:signed_in:" + user.getUid());
+                    Toast.makeText(MainActivity.this, "se ha logado "+ user.toString(),
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     // User is signed out
                     Log.d("TAG", "onAuthStateChanged:signed_out");
@@ -60,16 +63,29 @@ public class MainActivity extends AppCompatActivity {
         // -------- BOTON Y CAMPOS DE TEXTO
         final EditText email = (EditText) findViewById(R.id.email);
         final EditText password = (EditText) findViewById(R.id.password);
-        Button boton = (Button) (Button) findViewById(R.id.button3);
-        boton.setOnClickListener(new View.OnClickListener() {
+        Button autentica = (Button) (Button) findViewById(R.id.autentica);
+        autentica.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final String emailTexto = email.getText().toString();
                 final String passwordTexto = password.getText().toString();
-                creaUsuario(emailTexto,passwordTexto); // creamos el usuario
-
-
+                autenticaUsuario(emailTexto,passwordTexto); // autenticamos el usuario
                // Log.d("OnClick", "email=" + emailTexto + " password=" + passwordTexto);
+
+            }
+        });
+
+        Button obtenperfil = (Button) (Button) findViewById(R.id.obtenperfil);
+        obtenperfil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = "";
+                String nombre = "";
+                Uri photoUri = null;
+                obtenPerfilUsuario(nombre,email,photoUri); //obtenemos perfil del usuario
+
+
+                // Log.d("OnClick", "email=" + emailTexto + " password=" + passwordTexto);
 
             }
         });
@@ -168,8 +184,49 @@ Crea una cuenta nueva al pasar la dirección de correo electrónico y la contras
 
     public void autenticaUsuario (final String emailTexto, final String passwordTexto) {
 
+        mAuth.signInWithEmailAndPassword(emailTexto, passwordTexto)
+                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
+                        Toast.makeText(MainActivity.this, " autenticado "+emailTexto.toString()+passwordTexto.toString(),
+                                Toast.LENGTH_SHORT).show();
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.d("TAG", "signInWithEmail:failed", task.getException());
+                            Toast.makeText(MainActivity.this, "fallo al autenticar",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        // ...
+                    }
+                });
 
 
     }
+    public void obtenPerfilUsuario (String name, String email, Uri photoUrl) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Name, email address, and profile photo Url
+            //name = user.getDisplayName();
+            email = user.getEmail();
+            //photoUrl = user.getPhotoUrl();
+
+            // The user's ID, unique to the Firebase project. Do NOT use this value to
+            // authenticate with your backend server, if you have one. Use
+            // FirebaseUser.getToken() instead.
+            String uid = user.getUid();
+            if (user != null && email != null) {
+                Toast.makeText(getApplication(), "obtenido perfil " + name.toString() + email.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+    }
+
 }
 

@@ -10,10 +10,10 @@
 
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/autentica"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="autentica"
         tools:layout_constraintTop_creator="1"
         android:layout_marginStart="42dp"
         android:layout_marginTop="77dp"
@@ -50,6 +50,22 @@
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="50dp" />
+
+    <Button
+        android:id="@+id/obtenperfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="obtenperfil"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/button3"
+        android:layout_marginTop="101dp"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="105dp"
+        app:layout_constraintLeft_toLeftOf="@+id/email"
+        app:layout_constraintTop_toTopOf="@+id/password" />
 
 
 </android.support.constraint.ConstraintLayout>
